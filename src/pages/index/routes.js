@@ -7,7 +7,7 @@
 
 import Loadable from 'react-loadable';
 import LoadingIndicator from 'components/LoadingIndicator/LoadingIndicator';
-import { Redirect } from 'react-router-dom';
+import Layout from 'components/Layout/Layout';
 
 // 动态按需加载组件，首次展现时加载相关 js，并缓存
 const DynamicLoad = ({ loader, props }) => {
@@ -37,23 +37,17 @@ const check = (data, type) => {
 
 const routes = [
   {
-    path: '/',
-    component: props => {
-      if (!check(props.permissions, 'MP')) {
-        return <Redirect to="/mp/right" />;
-      }
-    }
-  },
-  {
     path: '/mp/right',
     component: props => {
       return (
-        <Authentication forbidden={check(props.permissions, 'MP')}>
-          <DynamicLoad
-            loader={() => import(/* webpackChunkName: "resource-page" */ 'mods/mp/right/index')}
-            props={props}
-          />
-        </Authentication>
+        <Layout {...props}>
+          <Authentication forbidden={check(props.attrs.permissions, 'MP')}>
+            <DynamicLoad
+              loader={() => import(/* webpackChunkName: "resource-page" */ 'mods/mp/right/index')}
+              props={props}
+            />
+          </Authentication>
+        </Layout>
       );
     }
   },
@@ -61,12 +55,14 @@ const routes = [
     path: '/mp/cpassign',
     component: props => {
       return (
-        <Authentication forbidden={check(props.permissions, 'MP')}>
-          <DynamicLoad
-            loader={() => import(/* webpackChunkName: "resource-page" */ 'mods/mp/cpassign/index')}
-            props={props}
-          />
-        </Authentication>
+        <Layout {...props}>
+          <Authentication forbidden={check(props.attrs.permissions, 'MP')}>
+            <DynamicLoad
+              loader={() => import(/* webpackChunkName: "resource-page" */ 'mods/mp/cpassign/index')}
+              props={props}
+            />
+          </Authentication>
+        </Layout>
       );
     }
   },
@@ -74,20 +70,16 @@ const routes = [
     path: '/mp/protect/whitelist',
     component: props => {
       return (
-        <Authentication forbidden={check(props.permissions, 'MP')}>
-          <DynamicLoad
-            loader={() => import(/* webpackChunkName: "resource-page" */ 'mods/mp/protect/whitelist/index')}
-            props={props}
-          />
-        </Authentication>
+        <Layout {...props}>
+          <Authentication forbidden={check(props.attrs.permissions, 'MP')}>
+            <DynamicLoad
+              loader={() => import(/* webpackChunkName: "resource-page" */ 'mods/mp/protect/whitelist/index')}
+              props={props}
+            />
+          </Authentication>
+        </Layout>
       );
     }
-  },
-  {
-    path: '',
-    component: () => (
-      <DynamicLoad loader={() => import(/* webpackChunkName: "not-found-page" */ 'mods/not-found/index')} />
-    )
   }
 ];
 
